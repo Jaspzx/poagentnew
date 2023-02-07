@@ -6,27 +6,27 @@
 function po_audithub_agent_drush_command() {
   $cmds = array();
   // Pixel Onion custom audit commands
-  // $cmds['audit-poaudithub'] = array(
-  //   'description' => dt('Audit Views.'),
-  //   'aliases' => array('poaudit'),
-  //   'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
-  //   'options' => site_audit_common_options(),
-  //   'checks' => array(
-  //     // Actual classnames must start with 'SiteAuditCheck'
-  //     array(
-  //       'name' => 'ViewsComplexity',
-  //       'location' => __DIR__ . '/Check/ViewsComplexity.php',
-  //     ),
-  //     array(
-  //       'name' => 'CustomModuleComplexity',
-  //       'location' => __DIR__ . '/Check/CustomModuleComplexity.php',
-  //     ),
-  //     array(
-  //       'name' => 'CustomThemeComplexity',
-  //       'location' => __DIR__ . '/Check/CustomThemeComplexity.php',
-  //     ),
-  //   ),
-  // );
+  $cmds['audit-poaudithub'] = array(
+    'description' => dt('Audit Views.'),
+    'aliases' => array('poaudit'),
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
+    // 'options' => site_audit_common_options(),
+    'checks' => array(
+      // Actual classnames must start with 'SiteAuditCheck'
+      array(
+        'name' => 'ViewsComplexity',
+        'location' => __DIR__ . '/Check/ViewsComplexity.php',
+      ),
+      array(
+        'name' => 'CustomModuleComplexity',
+        'location' => __DIR__ . '/Check/CustomModuleComplexity.php',
+      ),
+      array(
+        'name' => 'CustomThemeComplexity',
+        'location' => __DIR__ . '/Check/CustomThemeComplexity.php',
+      ),
+    ),
+  );
 
   // Drupal update status commands
   $cmds['po-pm-updatestatus'] = array(
@@ -79,14 +79,14 @@ function po_audithub_agent_drush_command() {
   );
 
   // Audit all components
-  $cmds['po-all'] = array(
+  $cmds['po-all-mod'] = array(
     'description' => dt('Perform all steps of the Pixel Onion Audit. Requires all modules required by all commands.'),
     'options' => array(
       'output-dir' => dt('Output directory for report. Default is ./audit_results'),
       'project-name' => dt('Machine name of project (lowercase).'),
       'modules' => dt('Additional modules to check. By default custom modules and themes are already included without enlisting them in this option. Separate multiple values by comma.')
     ),
-    'aliases' => array('poall'),
+    'aliases' => array('poallmod'),
   );
   return $cmds;
 }
@@ -214,7 +214,7 @@ function drush_po_audithub_agent_po_secrev() {
 /**
  * Callback for all functions.
  */
-function drush_po_audithub_agent_po_all() {
+function drush_po_audithub_agent_po_all_mod() {
 
   // Dependencies will be checked in each function before drush command
   // executed, no need to check here.
