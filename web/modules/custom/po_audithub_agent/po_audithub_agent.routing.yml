@@ -1,0 +1,7 @@
+po_audithub.simple_form:
+  path: '/poagent/audit'
+  defaults:
+    _form: '\Drupal\po_audithub_agent\Form\SimpleForm'
+    _title: 'Pixel Onion Audit'
+  requirements:
+    _permission: 'access content'

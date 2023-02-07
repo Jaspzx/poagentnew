@@ -1,0 +1,6 @@
+po_audithub_agent.admin:
+  title: 'Pixel Onion Audit'
+  description: 'Configure Pixel Onion Audit Hub settings and/or run audit'
+  parent: system.admin_config_development
+  url: internal:/poagent/audit
+  weight: 999

@@ -1,0 +1,11 @@
+name: Pixel Onion Audit Hub Agent
+description: Enables secure communication between your Drupal sites
+  and PO Audit Hub to monitor uptime, check for updates,
+  and collect site information.
+type: module
+# core: 8.x
+core_version_requirement: ^8 || ^9
+package: Custom
+dependencies:
+  - drupal:hacked
+  - drupal:security_review

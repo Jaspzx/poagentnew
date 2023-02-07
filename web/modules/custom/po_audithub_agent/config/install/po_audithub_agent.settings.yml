@@ -1,0 +1,3 @@
+po_audithub_agent:
+  api_key: 'key_from_po_audithub'
+  host_url: 'https://pohub.localhost'

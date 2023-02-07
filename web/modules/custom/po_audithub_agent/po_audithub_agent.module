@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * @file
+ * Agent for PO Audit Hub, sends data about client site to Hub.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\MultipartStream;
+
+/**
+ * Implements hook_help().
+ */
+function po_audithub_agent_help($path, RouteMatchInterface $route_match) {
+  switch ($path) {
+    case 'help.page.po_audithub_agent':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Enables secure communication between your Drupal site
+        and Pixel Onion Audit Hub to monitor uptime, check for updates,
+        and collect site information.') . '</p>';
+      return $output;
+    default:
+  }
+}
+
+function po_audithub_agent_admin() {
+  $form = array();
+
+  $form['onthisdate_maxdisp'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum number of links'),
+    '#default_value' => variable_get('po_audithub_agent_maxdisp', 3),
+    '#size' => 2,
+    '#maxlength' => 2,
+    '#description' => t("The maximum number of links to display in the block."),
+    '#required' => TRUE,
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_cron().
+ * Send module data to the hub site on every cron run.
+ */
+function po_audithub_agent_cron() {
+
+  // API URL to send report to.
+  // Get variable if available, else use default value in 2nd parameter.
+  $url = \Drupal::config('po_audithub_agent.settings')->get('po_audithub_agent.host_url')
+    . '/pohub/api/reports?api-key='
+    . \Drupal::config('po_audithub_agent.settings')->get('po_audithub_agent.api_key');
+
+  // File to be posted to PO Audit Hub
+  $site_name = \Drupal::config('system.site')->get('name');
+  $file_path = 'private://po_audit_files';
+  if (file_exists($file_path . '/' . $site_name . '-audit-report.html') && file_exists($file_path . '/' . $site_name . '-audit-report.json')) {
+    $report_html = fopen($file_path . '/' . $site_name . '-audit-report.html', 'rb');
+    $report_json = fopen($file_path . '/' . $site_name . '-audit-report.json', 'rb');
+
+    $multipart = new MultipartStream([
+      [
+        'name' => 'report_html',
+        'contents' => $report_html
+      ],
+      [
+        'name' => 'report_json',
+        'contents' => $report_json
+      ],
+    ]);
+
+    $request = new Request('POST', $url);
+    $request = $request->withBody($multipart);
+
+    $client = new Client(['verify' => FALSE]);
+    $response = $client->send($request);
+    $response_json = json_decode($response->getBody());
+    \Drupal::logger('po_audithub')->debug($response_json->body); 
+  }
+}

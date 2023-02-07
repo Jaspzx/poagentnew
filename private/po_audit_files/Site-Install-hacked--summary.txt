@@ -1,0 +1,10 @@
+Rebuilding Hacked! report
+Done.
+ Title              Name               Version        Status     Changed  Deleted 
+ Drupal core        drupal             9.5.3          Changed    589      2665    
+ Admin Toolbar      admin_toolbar      3.3.0          Unchanged  0        0       
+ Devel              devel              5.1.1          Unchanged  0        0       
+ Devel Kint Extras  devel_kint_extras  1.1.0          Unchanged  0        0       
+ Hacked!            hacked             8.x-2.0-beta3  Unchanged  0        0       
+ Security Review    security_review    2.0.1          Unchanged  0        0       
+ Site Audit         site_audit         4.0.0-alpha2   Unchanged  0        0
