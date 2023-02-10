@@ -42,42 +42,92 @@ function po_audithub_agent_admin() {
   return system_settings_form($form);
 }
 
+// function waffles_mod_form_node_climbing_type_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+
+// po-audithub-agent-audit-form
+// po_audithub_agent_audit_form_
+// function po_audithub_agent_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id){
+function po_audithub_agent_form_po_audithub_agent_audit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id){
+  // dpm($form_id);
+
+  // \Drupal::messenger()->addMessage(t("Hello?:"));
+  $form['tos'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Terms of service'),
+    '#weight' => -100
+  ];
+
+  // \Drupal::messenger()->addStatus('Auditform');
+
+  // $url = \Drupal::config('po_audithub_agent.settings')->get('po_audithub_agent.host_url')
+  //   . '/pohub/api/reports?api-key='
+  //   . \Drupal::config('po_audithub_agent.settings')->get('po_audithub_agent.api_key');
+
+  // // File to be posted to PO Audit Hub
+  // $site_name = \Drupal::config('system.site')->get('name');
+  // $file_path = 'private://po_audit_files';
+  // if (file_exists($file_path . '/' . $site_name . '-audit-report.html') && file_exists($file_path . '/' . $site_name . '-audit-report.json')) {
+  //   $report_html = fopen($file_path . '/' . $site_name . '-audit-report.html', 'rb');
+  //   $report_json = fopen($file_path . '/' . $site_name . '-audit-report.json', 'rb');
+
+  //   $multipart = new MultipartStream([
+  //     [
+  //       'name' => 'report_html',
+  //       'contents' => $report_html
+  //     ],
+  //     [
+  //       'name' => 'report_json',
+  //       'contents' => $report_json
+  //     ],
+  //   ]);
+
+  //   $request = new Request('POST', $url);
+  //   $request = $request->withBody($multipart);
+
+  //   $client = new Client(['verify' => FALSE]);
+  //   $response = $client->send($request);
+  //   $response_json = json_decode($response->getBody());
+  //   \Drupal::logger('po_audithub')->debug($response_json->body);
+  // }
+}
+
 /**
  * Implements hook_cron().
  * Send module data to the hub site on every cron run.
  */
-function po_audithub_agent_cron() {
+// function po_audithub_agent_cron() {
+//   // \Drupal::logger('po_audithub_agent')->notice('- Cron hook ran weeeeeeeeeee -');
 
-  // API URL to send report to.
-  // Get variable if available, else use default value in 2nd parameter.
-  $url = \Drupal::config('po_audithub_agent.settings')->get('po_audithub_agent.host_url')
-    . '/pohub/api/reports?api-key='
-    . \Drupal::config('po_audithub_agent.settings')->get('po_audithub_agent.api_key');
+//   // API URL to send report to.
+//   // Get variable if available, else use default value in 2nd parameter.
+//   $url = \Drupal::config('po_audithub_agent.settings')->get('po_audithub_agent.host_url')
+//     . '/pohub/api/reports?api-key='
+//     . \Drupal::config('po_audithub_agent.settings')->get('po_audithub_agent.api_key');
 
-  // File to be posted to PO Audit Hub
-  $site_name = \Drupal::config('system.site')->get('name');
-  $file_path = 'private://po_audit_files';
-  if (file_exists($file_path . '/' . $site_name . '-audit-report.html') && file_exists($file_path . '/' . $site_name . '-audit-report.json')) {
-    $report_html = fopen($file_path . '/' . $site_name . '-audit-report.html', 'rb');
-    $report_json = fopen($file_path . '/' . $site_name . '-audit-report.json', 'rb');
+//   // File to be posted to PO Audit Hub
+//   $site_name = \Drupal::config('system.site')->get('name');
+//   $file_path = 'private://po_audit_files';
+//   if (file_exists($file_path . '/' . $site_name . '-audit-report.html') && file_exists($file_path . '/' . $site_name . '-audit-report.json')) {
+//     $report_html = fopen($file_path . '/' . $site_name . '-audit-report.html', 'rb');
+//     $report_json = fopen($file_path . '/' . $site_name . '-audit-report.json', 'rb');
 
-    $multipart = new MultipartStream([
-      [
-        'name' => 'report_html',
-        'contents' => $report_html
-      ],
-      [
-        'name' => 'report_json',
-        'contents' => $report_json
-      ],
-    ]);
+//     $multipart = new MultipartStream([
+//       [
+//         'name' => 'report_html',
+//         'contents' => $report_html
+//       ],
+//       [
+//         'name' => 'report_json',
+//         'contents' => $report_json
+//       ],
+//     ]);
 
-    $request = new Request('POST', $url);
-    $request = $request->withBody($multipart);
+//     $request = new Request('POST', $url);
+//     $request = $request->withBody($multipart);
 
-    $client = new Client(['verify' => FALSE]);
-    $response = $client->send($request);
-    $response_json = json_decode($response->getBody());
-    \Drupal::logger('po_audithub')->debug($response_json->body); 
-  }
-}
+//     $client = new Client(['verify' => FALSE]);
+//     $response = $client->send($request);
+//     $response_json = json_decode($response->getBody());
+//     \Drupal::logger('po_audithub')->debug($response_json->body);
+//   }
+// }

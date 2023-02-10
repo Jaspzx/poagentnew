@@ -6,6 +6,11 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\Process\Process;
 
+use GuzzleHttp\Psr7\MultipartStream;
+use Drupal\Core\Routing\RouteMatchInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
+
 include 'po_audithub_agent.batch.inc';
 
 /**
@@ -17,7 +22,7 @@ class SimpleForm extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-
+    ksm($form);
     $form['api-key'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('api-key'),
@@ -50,7 +55,7 @@ class SimpleForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $command = ' poall';
+    $command = ' poallmod';
     $drush = '/Users/jaspzx/.composer/global/drush/drush/vendor/drush/drush/drush.php';
 
     $site_name = \Drupal::config('system.site')->get('name');
@@ -68,5 +73,42 @@ class SimpleForm extends FormBase {
     );
 
     batch_set($batch);
+
+    // -------------------------------------------------------------------------NEW FROM HERE
+    //
+    $url = \Drupal::config('po_audithub_agent.settings')->get('po_audithub_agent.host_url')
+    . '/pohub/api/reports?api-key='
+    . \Drupal::config('po_audithub_agent.settings')->get('po_audithub_agent.api_key');
+
+    // File to be posted to PO Audit Hub
+    $site_name = \Drupal::config('system.site')->get('name');
+    $file_path = 'private://po_audit_files';
+
+    // if (file_exists($file_path . '/' . $site_name . '-audit-report.html') || file_exists($file_path . '/' . $site_name . '-audit-report.json')) {
+      $report_html = fopen($file_path . '/' . 'test-site-audit-report.html', 'rb');
+      // $report_json = fopen($file_path . '/' . $site_name . '-audit-report.json', 'rb');
+      \Drupal::messenger()->addStatus($report_html);
+
+      $multipart = new MultipartStream([
+        [
+          'name' => 'report_html',
+          'contents' => $report_html
+        ]
+        // ,
+        // [
+        //   'name' => 'report_json',
+        //   'contents' => $report_json
+        // ],
+      ]);
+
+      $request = new Request('POST', $url);
+      $request = $request->withBody($multipart);
+
+      $client = new Client(['verify' => FALSE]);
+      $response = $client->send($request);
+      $response_json = json_decode($response->getBody());
+      \Drupal::logger('po_audithub')->debug($response_json->body);
+      // \Drupal::messenger()->addStatus($response_json->body);
+    // }
   }
 }
